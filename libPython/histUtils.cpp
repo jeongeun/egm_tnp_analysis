@@ -1519,7 +1519,7 @@ static const char __pyx_k_maxWeight[] = "maxWeight";
 static const char __pyx_k_pair_mass[] = " pair_mass ";
 static const char __pyx_k_ValueError[] = "ValueError";
 static const char __pyx_k_cutBinList[] = "cutBinList";
-static const char __pyx_k_s_mcTrue_1[] = "%s && mcTrue==1";
+//static const char __pyx_k_s_mcTrue_1[] = "%s && mcTrue==1";
 static const char __pyx_k_pair_mass_2[] = "pair_mass";
 static const char __pyx_k_s_Selection[] = "%s_Selection";
 static const char __pyx_k_s_s_f_s_1_0[] = "( %s ) * (%s < %f ? %s : 1.0 )";
@@ -1623,7 +1623,7 @@ static PyObject *__pyx_n_s_s_2;
 static PyObject *__pyx_kp_s_s_Fail;
 static PyObject *__pyx_kp_s_s_Pass;
 static PyObject *__pyx_kp_s_s_Selection;
-static PyObject *__pyx_kp_s_s_mcTrue_1;
+//static PyObject *__pyx_kp_s_s_mcTrue_1;
 static PyObject *__pyx_kp_s_s_s;
 static PyObject *__pyx_kp_s_s_s_2;
 static PyObject *__pyx_kp_s_s_s_f_s_1_0;
@@ -2546,10 +2546,10 @@ static PyObject *__pyx_pf_9histUtils_2makePassFailHistograms(CYTHON_UNUSED PyObj
  *         if not sample.cut is None :
  *             cuts = '%s && %s' % (cuts,sample.cut)
  */
-      __pyx_t_3 = __Pyx_PyString_FormatSafe(__pyx_kp_s_s_mcTrue_1, __pyx_v_cuts); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 89, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_3);
-      __Pyx_DECREF_SET(__pyx_v_cuts, __pyx_t_3);
-      __pyx_t_3 = 0;
+//      __pyx_t_3 = __Pyx_PyString_FormatSafe(__pyx_kp_s_s_mcTrue_1, __pyx_v_cuts); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 89, __pyx_L1_error)
+//      __Pyx_GOTREF(__pyx_t_3);
+//      __Pyx_DECREF_SET(__pyx_v_cuts, __pyx_t_3);
+//      __pyx_t_3 = 0;
 
       /* "histUtils.pyx":88
  * 
@@ -3741,7 +3741,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_kp_s_s_Fail, __pyx_k_s_Fail, sizeof(__pyx_k_s_Fail), 0, 0, 1, 0},
   {&__pyx_kp_s_s_Pass, __pyx_k_s_Pass, sizeof(__pyx_k_s_Pass), 0, 0, 1, 0},
   {&__pyx_kp_s_s_Selection, __pyx_k_s_Selection, sizeof(__pyx_k_s_Selection), 0, 0, 1, 0},
-  {&__pyx_kp_s_s_mcTrue_1, __pyx_k_s_mcTrue_1, sizeof(__pyx_k_s_mcTrue_1), 0, 0, 1, 0},
+//  {&__pyx_kp_s_s_mcTrue_1, __pyx_k_s_mcTrue_1, sizeof(__pyx_k_s_mcTrue_1), 0, 0, 1, 0},
   {&__pyx_kp_s_s_s, __pyx_k_s_s, sizeof(__pyx_k_s_s), 0, 0, 1, 0},
   {&__pyx_kp_s_s_s_2, __pyx_k_s_s_2, sizeof(__pyx_k_s_s_2), 0, 0, 1, 0},
   {&__pyx_kp_s_s_s_f_s_1_0, __pyx_k_s_s_f_s_1_0, sizeof(__pyx_k_s_s_f_s_1_0), 0, 0, 1, 0},

@@ -2,10 +2,10 @@
 ########## General settings
 #############################################################
 flags = {
-    'passingHEEPV70'           : '(passingHEEPV70 == 1)',
+    'passingHEEPV71'           : '(passingHEEPV71 == 1)',
     }
-
-baseOutDir = 'results/tnpEleIDs/Run3F'
+#baseOutDir = 'results/tnpEleIDs/Run3_130X_ReReco_postEE_EFG'
+baseOutDir = 'results_test/tnpEleIDs/Run3_130X_ReReco_preEE_CD'
 
 #############################################################
 ########## samples definition  - preparing the samples
@@ -16,15 +16,20 @@ import etc.inputs.tnpSampleDef as tnpSamples
 tnpTreeDir = 'tnpEleIDs'
 #Run3
 samplesDef = {
-    'data'   : tnpSamples.Run3['data_Run3'].clone(),
-    'mcNom'  : tnpSamples.Run3['DY_postEE'].clone(),
+   # 'data'   : tnpSamples.Run3_130X_ReReco_postEE['data_Run2022E'].clone(),
+   # 'mcNom'  : tnpSamples.Run3_130X_ReReco_postEE['DY_postEE'].clone(),
+   # 'tagSel' : tnpSamples.Run3_130X_ReReco_postEE['DY_postEE'].clone(),
+    'data'   : tnpSamples.Run3_130X_ReReco_preEE['data_Run2022C'].clone(),
+    'mcNom'  : tnpSamples.Run3_130X_ReReco_preEE['DY_preEE'].clone(),
+    'tagSel' : tnpSamples.Run3_130X_ReReco_preEE['DY_preEE'].clone(),
     # 'mcAlt'  : tnpSamples.Run3['DY_postEE'].clone(),
-    'tagSel' : tnpSamples.Run3['DY_postEE'].clone(),
 }
+samplesDef['data'].add_sample( tnpSamples.Run3_130X_ReReco_preEE['data_Run2022D'] )
+#samplesDef['data'].add_sample( tnpSamples.Run3_130X_ReReco_postEE['data_Run2022F'] )
+#samplesDef['data'].add_sample( tnpSamples.Run3_130X_ReReco_postEE['data_Run2022G'] )
 
 ## can add data sample easily
 # samplesDef['data'].add_sample( tnpSamples.Run3['data_Run3C'] )
-# samplesDef['data'].add_sample( tnpSamples.Run3['data_Run3D'] )
 # samplesDef['data'].add_sample( tnpSamples.Run3['data_Run3E'] )
 # samplesDef['data'].add_sample( tnpSamples.Run3['data_Run3F'] )
 # samplesDef['data'].add_sample( tnpSamples.Run3['data_Run3G'] )
@@ -39,12 +44,12 @@ if not samplesDef['tagSel'] is None: samplesDef['tagSel'].set_tnpTree(tnpTreeDir
 ## all the samples MUST have different names (i.e. sample.name must be different for all)
 ## if you need to use 2 times the same sample, then rename the second one
 #samplesDef['data'  ].set_cut('run >= 273726')
-if not samplesDef['mcNom' ] is None: samplesDef['mcNom' ].set_mcTruth()
-# if not samplesDef['mcAlt' ] is None: samplesDef['mcAlt' ].set_mcTruth()
-if not samplesDef['tagSel'] is None: samplesDef['tagSel'].set_mcTruth()
-if not samplesDef['tagSel'] is None:
-    samplesDef['tagSel'].rename('mcAltSel_DY_madgraph')
-    samplesDef['tagSel'].set_cut('tag_Ele_pt > 32')  #canceled non trig MVA cut
+#if not samplesDef['mcNom' ] is None: samplesDef['mcNom' ].set_mcTruth()
+## if not samplesDef['mcAlt' ] is None: samplesDef['mcAlt' ].set_mcTruth()
+#if not samplesDef['tagSel'] is None: samplesDef['tagSel'].set_mcTruth()
+#if not samplesDef['tagSel'] is None:
+#    samplesDef['tagSel'].rename('mcAltSel_DY_madgraph')
+#    samplesDef['tagSel'].set_cut('tag_Ele_pt > 32')  #canceled non trig MVA cut
 
 ### set MC weight, simple way (use tree weight) 
 # weightName = 'totWeight'
@@ -52,17 +57,24 @@ if not samplesDef['tagSel'] is None:
 # if not samplesDef['mcAlt' ] is None: samplesDef['mcAlt' ].set_weight(weightName)
 # if not samplesDef['tagSel'] is None: samplesDef['tagSel'].set_weight(weightName)
 
-
 ### set MC weight, can use several pileup rw for different data taking periods
-##weightName = 'weights_data_Run2022_B-G.totWeight'
-weightName = 'weights_2022_run3.PUweight'
+weightName = 'weights_2022_runBCD.totWeight'
 if not samplesDef['mcNom' ] is None: samplesDef['mcNom' ].set_weight(weightName)
 ##if not samplesDef['mcAlt' ] is None: samplesDef['mcAlt' ].set_weight(weightName)
 if not samplesDef['tagSel'] is None: samplesDef['tagSel'].set_weight(weightName)
-if not samplesDef['mcNom' ] is None: samplesDef['mcNom' ].set_puTree('/cms/ldap_home/taebh/CMSSW_11_2_0/src/egm_tnp_analysis/PU_Trees/DY_postEE_ele.pu.puTree.root')
+if not samplesDef['mcNom' ] is None: samplesDef['mcNom' ].set_puTree('/d0/scratch/jelee/workspace/HEEPstudy/HEEP2024March/CMSSW_11_2_0/src/egm_tnp_analysis/PU_Trees/DY_preEE_ele.pu.puTree.root')
+#if not samplesDef['mcNom' ] is None: samplesDef['mcNom' ].set_puTree('/d0/scratch/jelee/workspace/HEEPstudy/HEEP2024March/CMSSW_11_2_0/src/egm_tnp_analysis/PU_Trees/DY_postEE_ele.pu.puTree.root')
 # if not samplesDef['mcAlt' ] is None: samplesDef['mcAlt' ].set_puTree('/eos/cms/store/group/phys_egamma/swmukher/UL2017/PU_miniAOD/DY_amcatnloext_ele.pu.puTree.root')
-if not samplesDef['tagSel'] is None: samplesDef['tagSel'].set_puTree('/cms/ldap_home/taebh/CMSSW_11_2_0/src/egm_tnp_analysis/PU_Trees/DY_postEE_ele.pu.puTree.root')
+if not samplesDef['tagSel'] is None: samplesDef['tagSel'].set_puTree('/d0/scratch/jelee/workspace/HEEPstudy/HEEP2024March/CMSSW_11_2_0/src/egm_tnp_analysis/PU_Trees/DY_preEE_ele.pu.puTree.root')
+#if not samplesDef['tagSel'] is None: samplesDef['tagSel'].set_puTree('/d0/scratch/jelee/workspace/HEEPstudy/HEEP2024March/CMSSW_11_2_0/src/egm_tnp_analysis/PU_Trees/DY_postEE_ele.pu.puTree.root')
 #
+#weightName = 'weights_2022_runEFG.totWeight'
+#if not samplesDef['mcNom' ] is None: samplesDef['mcNom' ].set_weight(weightName)
+###if not samplesDef['mcAlt' ] is None: samplesDef['mcAlt' ].set_weight(weightName)
+#if not samplesDef['tagSel'] is None: samplesDef['tagSel'].set_weight(weightName)
+##if not samplesDef['mcNom' ] is None: samplesDef['mcNom' ].set_puTree('/d0/scratch/jelee/workspace/HEEPstudy/HEEP2024March/CMSSW_11_2_0/src/egm_tnp_analysis/PU_Trees/DY_postEE_ele.pu.puTree.root')
+## if not samplesDef['mcAlt' ] is None: samplesDef['mcAlt' ].set_puTree('/eos/cms/store/group/phys_egamma/swmukher/UL2017/PU_miniAOD/DY_amcatnloext_ele.pu.puTree.root')
+##if not samplesDef['tagSel'] is None: samplesDef['tagSel'].set_puTree('/d0/scratch/jelee/workspace/HEEPstudy/HEEP2024March/CMSSW_11_2_0/src/egm_tnp_analysis/PU_Trees/DY_postEE_ele.pu.puTree.root')
 #############################################################
 ########## bining definition  [can be nD bining]
 #############################################################
