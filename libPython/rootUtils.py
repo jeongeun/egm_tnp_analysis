@@ -2,6 +2,7 @@ import ROOT as rt
 import math
 from fitUtils import *
 import ctypes
+#from fitSimultaneousUtils import *
 
 def removeNegativeBins(h):
     for i in xrange(h.GetNbinsX()):
@@ -13,11 +14,11 @@ def makePassFailHistograms( sample, flag, bindef, var ):
     ## open rootfile
     tree = rt.TChain(sample.tree)
     for p in sample.path:
-        print ' adding rootfile: ', p
+        print (' adding rootfile: ', p)
         tree.Add(p)
-
+        print ("ciao")
     if not sample.puTree is None:
-        print ' - Adding weight tree: %s from file %s ' % (sample.weight.split('.')[0], sample.puTree)
+        print (' - Adding weight tree: %s from file %s ' % (sample.weight.split('.')[0], sample.puTree))
         tree.AddFriend(sample.weight.split('.')[0],sample.puTree)
 
     ## open outputFile
@@ -64,44 +65,55 @@ def makePassFailHistograms( sample, flag, bindef, var ):
 
         bin1 = 1
         bin2 = hPass[ib].GetXaxis().GetNbins()
-        epass = -1.0
-        efail = -1.0
+        epass = -1.
+        #epass = ctypes.c_double(-1.)
+        efail = -1.
+        #efail = ctypes.c_double(-1.)
         passI = hPass[ib].IntegralAndError(bin1,bin2,ctypes.c_double(epass))
         failI = hFail[ib].IntegralAndError(bin1,bin2,ctypes.c_double(efail))
-        eff   = 0
-        e_eff = 0
+        eff = 0.
+        e_eff = 0.
         if passI > 0 :
             itot  = (passI+failI)
             eff   = passI / (passI+failI)
             e_eff = math.sqrt(passI*passI*efail*efail + failI*failI*epass*epass) / (itot*itot)
-        print cuts
-        print '    ==> pass: %.1f +/- %.1f ; fail : %.1f +/- %.1f : eff: %1.3f +/- %1.3f' % (passI,epass,failI,efail,eff,e_eff)
+        print (cuts)
+        print ('    ==> pass: %.1f +/- %.1f ; fail : %.1f +/- %.1f : eff: %1.3f +/- %1.3f' % (passI,epass,failI,efail,eff,e_eff))
     outfile.Close()
 
 
 def histPlotter( filename, tnpBin, plotDir ):
-    print 'opening ', filename
-    print '  get canvas: ' , '%s_Canv' % tnpBin['name']
+    print ('opening ', filename)
+    print ('  get canvas: ' , '%s_Canv' % tnpBin['name'])
     rootfile = rt.TFile(filename,"read")
 
     c = rootfile.Get( '%s_Canv' % tnpBin['name'] )
     c.Print( '%s/%s.png' % (plotDir,tnpBin['name']))
 
 
+###########################################
+# --start Jeongeun added in 08/30 2024
+###########################################
+
 def computeEffi( n1,n2,e1,e2):
     effout = []
-    if n1 + n2 > 0.0:
+    if n1 + n2 > 0.0 : #n1=pass, n2=fail
        eff   = n1/(n1+n2)
+       #e_eff = double(-1.)
        e_eff = 1/(n1+n2)*math.sqrt(e1*e1*n2*n2+e2*e2*n1*n1)/(n1+n2)
-       if e_eff < 0.001 : e_eff = 0.001
+       if e_eff < 0.001 :  e_eff = 0.001
     else:
-       print '@@@ n1+n2 = 0'
+       print ('@@@@@@@@@ ---11-  n1 + n2 = ', n1+n2)
        eff   = 0.0
        e_eff = 0.0
+
     effout.append(eff)
     effout.append(e_eff)
     
     return effout
+###########################################
+# --end Jeongeun added in 08/30 2024
+###########################################
 
 
 import os.path
@@ -121,6 +133,7 @@ def getAllEffi( info, bindef ):
         nF = hF.IntegralAndError(bin1,bin2,ctypes.c_double(eF))
 
         effis['mcNominal'] = computeEffi(nP,nF,eP,eF)
+        #effis['mcNominal'] = 1.
         rootfile.Close()
     else: effis['mcNominal'] = [-1,-1]
 
@@ -138,6 +151,7 @@ def getAllEffi( info, bindef ):
         nF = hF.IntegralAndError(bin1,bin2,ctypes.c_double(eF))
 
         effis['tagSel'] = computeEffi(nP,nF,eP,eF)
+        #effis['tagSel'] = 1.
         rootfile.Close()
     else: effis['tagSel'] = [-1,-1]
         
@@ -149,12 +163,15 @@ def getAllEffi( info, bindef ):
         #bin2 = hP.GetXaxis().GetNbins()
         bin1 = 11
         bin2 = 70
+        #eP = ctypes.c_double(-1.)
+        #eF = double(-1.)
         eP = -1.
         eF = -1.
         nP = hP.IntegralAndError(bin1,bin2,ctypes.c_double(eP))
         nF = hF.IntegralAndError(bin1,bin2,ctypes.c_double(eF))
 
         effis['mcAlt'] = computeEffi(nP,nF,eP,eF)
+        #effis['mcAlt'] = 1.
         rootfile.Close()
     else: effis['mcAlt'] = [-1,-1]
 
@@ -200,8 +217,8 @@ def getAllEffi( info, bindef ):
         hP = rootfile.Get('%s_Pass'%bindef['name'])
         hF = rootfile.Get('%s_Fail'%bindef['name'])
 
-        #if eP > math.sqrt(hP.Integral()) : eP = math.sqrt(hP.Integral())
-        #if eF > math.sqrt(hF.Integral()) : eF = math.sqrt(hF.Integral())
+        if eP > math.sqrt(hP.Integral()) : eP = math.sqrt(hP.Integral())
+        if eF > math.sqrt(hF.Integral()) : eF = math.sqrt(hF.Integral())
         rootfile.Close()
 
         effis['dataAltSig'] = computeEffi(nP,nF,eP,eF)
@@ -225,8 +242,8 @@ def getAllEffi( info, bindef ):
         hP = rootfile.Get('%s_Pass'%bindef['name'])
         hF = rootfile.Get('%s_Fail'%bindef['name'])
 
-        #if eP > math.sqrt(hP.Integral()) : eP = math.sqrt(hP.Integral())
-        #if eF > math.sqrt(hF.Integral()) : eF = math.sqrt(hF.Integral())
+        if eP > math.sqrt(hP.Integral()) : eP = math.sqrt(hP.Integral())
+        if eF > math.sqrt(hF.Integral()) : eF = math.sqrt(hF.Integral())
         rootfile.Close()
 
         effis['dataAltBkg'] = computeEffi(nP,nF,eP,eF)

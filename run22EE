@@ -1,0 +1,32 @@
+echo "Start-------"
+echo "python tnpEGM_fitter.py etc/config/settings_ele_2022preEE.py --flag passingHEEPV71 --createBins & --createHists"
+
+python tnpEGM_fitter.py etc/config/settings_ele_2022preEE.py --flag passingHEEPV71 --createBins
+
+python tnpEGM_fitter.py etc/config/settings_ele_2022preEE.py --flag passingHEEPV71 --createHists
+
+echo "python tnpEGM_fitter.py etc/config/settings_ele_2022preEE.py --flag passingHEEPV71  --doFit"
+
+python tnpEGM_fitter.py etc/config/settings_ele_2022preEE.py --flag passingHEEPV71  --doFit
+
+echo "python tnpEGM_fitter.py etc/config/settings_ele_2022preEE.py --flag passingHEEPV71  --doFit  --altBkg"
+
+python tnpEGM_fitter.py etc/config/settings_ele_2022preEE.py --flag passingHEEPV71  --doFit  --altBkg
+
+echo "python tnpEGM_fitter.py etc/config/settings_ele_2022preEE.py --flag passingHEEPV71  --doFit  --mcSig"
+
+python tnpEGM_fitter.py etc/config/settings_ele_2022preEE.py --flag passingHEEPV71  --doFit  --mcSig
+
+echo "python tnpEGM_fitter.py etc/config/settings_ele_2022preEE.py --flag passingHEEPV71  --doFit  --mcSig --altSig"
+
+python tnpEGM_fitter.py etc/config/settings_ele_2022preEE.py --flag passingHEEPV71  --doFit  --mcSig --altSig
+
+echo "python tnpEGM_fitter.py etc/config/settings_ele_2022preEE.py --flag passingHEEPV71  --doFit  --altSig"
+
+python tnpEGM_fitter.py etc/config/settings_ele_2022preEE.py --flag passingHEEPV71  --doFit  --altSig
+
+echo "python tnpEGM_fitter.py etc/config/settings_ele_2022preEE.py --flag passingHEEPV71  --sumUp"
+
+python tnpEGM_fitter.py etc/config/settings_ele_2022preEE.py --flag passingHEEPV71  --sumUp
+
+echo "Finished-------"

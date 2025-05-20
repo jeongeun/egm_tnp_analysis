@@ -73,8 +73,8 @@ def CMS_lumi(pad,  iPeriod,  iPosX ):
         lumiText += lumi_13TeV
         lumiText += " (13 TeV)"
     elif ( iPeriod==5 ):
-        lumiText += lumi_13TeV
-        lumiText += " (13.6 TeV)"
+         lumiText += lumi_13TeV
+         lumiText += " (13.6 TeV) 2023"
     elif ( iPeriod==7 ):
         if( outOfFrame ):lumiText += "#scale[0.85]{"
         lumiText += lumi_13TeV 
@@ -91,7 +91,7 @@ def CMS_lumi(pad,  iPeriod,  iPosX ):
     elif ( iPeriod==0 ):
         lumiText += lumi_sqrtS
             
-    print (lumiText)
+    print lumiText
 
     latex = rt.TLatex()
     latex.SetNDC()

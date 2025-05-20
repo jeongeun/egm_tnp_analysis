@@ -1,0 +1,171 @@
+https://github.com/cms-egamma/egm_tnp_analysis/tree/2022
+cmsrel CMSSW_11_2_0
+cd CMSSW_11_2_0/src
+cmsenv
+git clone -b 2022 git@github.com:cms-egamma/egm_tnp_analysis.git ### 2024 May updated
+cd egm_tnp_analysis
+make 
+
+
+* Modified Files :
+egm_tnp_analysis/etc/config/settings_ele_2022preEE.py 
+egm_tnp_analysis/etc/inputs/tnpSampleDef.py 
+egm_tnp_analysis/libPython/tnpClassUtils.py
+egm_tnp_analysis/libPython/puReweighter.py 
+egm_tnp_analysis/libPython/PU_Trees  
+egm_tnp_analysis/PU_Trees 
+
+cd egm_tnp_analysis
+* Copied HLT reweighted mc samples
+egm_tnp_analysis/etc/root/mc/Rew_DY_NLO_amc_2022preEE_trig_eff_CD.root
+
+$ python pureweight.py
+
+** puReweighter requires root_numpy.
+** To install on lxplus:
+pip install --user root_numpy
+**** name: DY_amc_preEE
+('  path    : ', ['/d0/scratch/jelee/workspace/HEEPstudy/HEEP2024Aug/TnPFitter/CMSSW_11_2_0/src/egm_tnp_analysis/etc/root/mc/Rew_DY_NLO_amc_2022preEE_trig_eff_CD.root'])
+('  tnpTree : ', 'tnpEleIDs/fitter_tree')
+   --- MC sample ---
+('  nEvts    : ', -1)
+('  mcTruth  : ', False)
+('  puTree   : ', 'PU_Trees/DY_amc_preEE_ele.pu.puTree.root')
+('  weight   : ', None)
+Opening mc file:  /d0/scratch/jelee/workspace/HEEPstudy/HEEP2024Aug/TnPFitter/CMSSW_11_2_0/src/egm_tnp_analysis/etc/root/mc/Rew_DY_NLO_amc_2022preEE_trig_eff_CD.root
+puData[data_Run2022BCD] length = 100
+-> nEvtsTot  20768305
+iEvt: 0
+iEvt: 100000
+...
+...
+
+**** name: DY_pow_preEE
+('  path    : ', ['/d0/scratch/jelee/workspace/HEEPstudy/HEEP2024Aug/TnPFitter/CMSSW_11_2_0/src/egm_tnp_analysis/etc/root/mc/Rew_DY_NLO_pow_M-ALL_2022preEE_trig_eff_CD.root'])
+('  tnpTree : ', 'tnpEleIDs/fitter_tree')
+   --- MC sample ---
+('  nEvts    : ', -1)
+('  mcTruth  : ', False)
+('  puTree   : ', 'PU_Trees/DY_pow_preEE_ele.pu.puTree.root')
+('  weight   : ', None)
+Opening mc file:  /d0/scratch/jelee/workspace/HEEPstudy/HEEP2024Aug/TnPFitter/CMSSW_11_2_0/src/egm_tnp_analysis/etc/root/mc/Rew_DY_NLO_pow_M-ALL_2022preEE_trig_eff_CD.root
+puData[data_Run2022BCD] length = 100
+-> nEvtsTot  965909
+iEvt: 0
+iEvt: 100000
+
+**** name: DY_mg_preEE
+('  path    : ', ['/d0/scratch/jelee/workspace/HEEPstudy/HEEP2024Aug/TnPFitter/CMSSW_11_2_0/src/egm_tnp_analysis/etc/root/mc/Rew_DY_LO_mg_2022preEE_trig_eff_CD.root'])
+('  tnpTree : ', 'tnpEleIDs/fitter_tree')
+   --- MC sample ---
+('  nEvts    : ', -1)
+('  mcTruth  : ', False)
+('  puTree   : ', 'PU_Trees/DY_mg_preEE_ele.pu.puTree.root')
+('  weight   : ', None)
+Opening mc file:  /d0/scratch/jelee/workspace/HEEPstudy/HEEP2024Aug/TnPFitter/CMSSW_11_2_0/src/egm_tnp_analysis/etc/root/mc/Rew_DY_LO_mg_2022preEE_trig_eff_CD.root
+puData[data_Run2022BCD] length = 100
+-> nEvtsTot  2255241
+ 
+
+$ vi etc/config/settings_ele_2022preEE.py
+
+baseOutDir = 'results/2022/tnpEleID/preEE_v1/'
+
+samplesDef = {
+    'data'   : tnpSamples.Run2022_130X_ReReco_preEE['data_Run2022CD'].clone(),
+    'mcNom'  : tnpSamples.Run2022_130X_ReReco_preEE['DY_amc_preEE'].clone(),
+    'mcAlt'  : tnpSamples.Run2022_130X_ReReco_preEE['DY_pow_preEE'].clone(),
+    #'mcAlt'  : tnpSamples.Run2022_130X_ReReco_preEE['DY_mg_preEE'].clone(),
+    'tagSel' : tnpSamples.Run2022_130X_ReReco_preEE['DY_amc_preEE'].clone(),
+}
+
+samplesDef['data' ].set_tnpTree(tnpTreeDir)
+
+if not samplesDef['mcNom' ] is None: samplesDef['mcNom' ].set_tnpTree(tnpTreeDir)
+if not samplesDef['mcAlt' ] is None: samplesDef['mcAlt' ].set_tnpTree(tnpTreeDir)
+if not samplesDef['tagSel'] is None: samplesDef['tagSel'].set_tnpTree(tnpTreeDir)
+
+if not samplesDef['mcNom' ] is None: samplesDef['mcNom' ].set_mcTruth()
+if not samplesDef['mcAlt' ] is None: samplesDef['mcAlt' ].set_mcTruth()
+if not samplesDef['tagSel'] is None: samplesDef['tagSel'].set_mcTruth()
+if not samplesDef['tagSel'] is None:
+    samplesDef['tagSel'].rename('mcTagSel_DY_amcatnlo')
+    samplesDef['tagSel'].set_cut('tag_Ele_pt > 37') #canceled non trig MVA cut
+
+weightName = 'weights_data_Run2022BCD.totWeight' #'weights_2022_runBCD.totWeight'
+
+if not samplesDef['mcNom' ] is None: samplesDef['mcNom' ].set_weight(weightName)
+if not samplesDef['mcAlt' ] is None: samplesDef['mcAlt' ].set_weight(weightName)
+if not samplesDef['tagSel'] is None: samplesDef['tagSel'].set_weight(weightName)
+if not samplesDef['mcNom' ] is None: samplesDef['mcNom' ].set_puTree('PU_Trees/DY_amc_preEE_ele.pu.puTree.root')
+#if not samplesDef['mcAlt' ] is None: samplesDef['mcAlt' ].set_puTree('PU_Trees/DY_mg_preEE_ele.pu.puTree.root')
+if not samplesDef['mcAlt' ] is None: samplesDef['mcAlt' ].set_puTree('PU_Trees/DY_pow_preEE_ele.pu.puTree.root')
+if not samplesDef['tagSel'] is None: samplesDef['tagSel'].set_puTree('PU_Trees/DY_amc_preEE_ele.pu.puTree.root')
+
+
+### TnP Fitter
+
+python tnpEGM_fitter.py etc/config/settings_ele_2023postBPIX.py --flag passingHEEPV71 --createBins
+python tnpEGM_fitter.py etc/config/settings_ele_2023postBPIX.py --flag passingHEEPV71 --createHists
+
+### Data nominal Fit
+python tnpEGM_fitter.py etc/config/settings_ele_2023postBPIX.py --flag passingHEEPV71  --doFit
+
+### Data altSig, altBkg
+python tnpEGM_fitter.py etc/config/settings_ele_2023postBPIX.py --flag passingHEEPV71  --doFit  --altSig 
+python tnpEGM_fitter.py etc/config/settings_ele_2023postBPIX.py --flag passingHEEPV71  --doFit  --altSig  --addGaus
+python tnpEGM_fitter.py etc/config/settings_ele_2023postBPIX.py --flag passingHEEPV71  --doFit  --altBkg 
+python tnpEGM_fitter.py etc/config/settings_ele_2023postBPIX.py --flag passingHEEPV71  --doFit  --altBkg  --addGaus
+---------------------------------------------------------
+python tnpEGM_fitter.py etc/config/settings_ele_2023postBPIX.py --flag passingHEEPV71  --doFit  --iBin ib
+
+
+### MC nominal Fit
+python tnpEGM_fitter.py etc/config/settings_ele_2023postBPIX.py --flag passingHEEPV71  --doFit  --mcSig
+
+### MC altSig, altBkg
+python tnpEGM_fitter.py etc/config/settings_ele_2023postBPIX.py --flag passingHEEPV71  --doFit  --mcSig   --altSig
+python tnpEGM_fitter.py etc/config/settings_ele_2023postBPIX.py --flag passingHEEPV71  --doFit  --mcSig  --addGaus  --altSig
+---------------------------------------------------------
+python tnpEGM_fitter.py etc/config/settings_ele_2023postBPIX.py --flag passingHEEPV71  --doFit  --mcSig  --altSig --iBin ib
+
+### Plotting
+python tnpEGM_fitter.py etc/config/settings_ele_2023postBPIX.py --flag passingHEEPV71 --sumUp
+
+
+########################################33
+python tnpEGM_fitter.py etc/config/settings_ele_2022postEE.py --flag passingHEEPV71 --createBins
+python tnpEGM_fitter.py etc/config/settings_ele_2022postEE.py --flag passingHEEPV71 --createHists
+python tnpEGM_fitter.py etc/config/settings_ele_2022postEE.py --flag passingHEEPV71  --doFit
+python tnpEGM_fitter.py etc/config/settings_ele_2022postEE.py --flag passingHEEPV71 --sumUp
+python tnpEGM_fitter.py etc/config/settings_ele_2022postEE.py --flag passingHEEPV71  --doFit  --mcSig
+python tnpEGM_fitter.py etc/config/settings_ele_2022postEE.py --flag passingHEEPV71 --sumUp
+python tnpEGM_fitter.py etc/config/settings_ele_2022postEE.py --flag passingHEEPV71  --doFit  --altBkg 
+python tnpEGM_fitter.py etc/config/settings_ele_2022postEE.py --flag passingHEEPV71 --sumUp
+python tnpEGM_fitter.py etc/config/settings_ele_2022postEE.py --flag passingHEEPV71  --doFit  --altSig 
+python tnpEGM_fitter.py etc/config/settings_ele_2022postEE.py --flag passingHEEPV71 --sumUp
+
+
+python tnpEGM_fitter.py etc/config/settings_ele_2022postEE.py --flag passingHEEPV71  --doFit  --altSig  --addGaus
+python tnpEGM_fitter.py etc/config/settings_ele_2022postEE.py --flag passingHEEPV71  --doFit  --iBin ib
+python tnpEGM_fitter.py etc/config/settings_ele_2022postEE.py --flag passingHEEPV71  --doFit  --mcSig   --altSig
+
+#########################################3
+python tnpEGM_fitter.py etc/config/settings_ele_2023preBPIX.py --flag passingHEEPV71 --createBins
+python tnpEGM_fitter.py etc/config/settings_ele_2023preBPIX.py --flag passingHEEPV71 --createHists
+python tnpEGM_fitter.py etc/config/settings_ele_2023preBPIX.py --flag passingHEEPV71  --doFit
+python tnpEGM_fitter.py etc/config/settings_ele_2023preBPIX.py --flag passingHEEPV71  --doFit  --altBkg
+python tnpEGM_fitter.py etc/config/settings_ele_2023preBPIX.py --flag passingHEEPV71  --sumUp
+python tnpEGM_fitter.py etc/config/settings_ele_2023preBPIX.py --flag passingHEEPV71  --doFit  --mcSig
+python tnpEGM_fitter.py etc/config/settings_ele_2023preBPIX.py --flag passingHEEPV71  --doFit  --mcSig --altSig
+python tnpEGM_fitter.py etc/config/settings_ele_2023preBPIX.py --flag passingHEEPV71  --sumUp
+--
+python tnpEGM_fitter.py etc/config/settings_ele_2023preBPIX.py --flag passingHEEPV71  --doFit  --mcSig --addGaus
+python tnpEGM_fitter.py etc/config/settings_ele_2023preBPIX.py --flag passingHEEPV71  --doFit  --mcSig --altSig --addGaus
+python tnpEGM_fitter.py etc/config/settings_ele_2023preBPIX.py --flag passingHEEPV71  --doFit  --altSig
+python tnpEGM_fitter.py etc/config/settings_ele_2023preBPIX.py --flag passingHEEPV71  --doFit  --altSig --addGaus
+python tnpEGM_fitter.py etc/config/settings_ele_2023preBPIX.py --flag passingHEEPV71  --sumUp
+
+We checked all the years and in every year most of the altSignal fits didn't converge properly leading to a fitted curve very far from the data point. The problem is probably arising from the poor quality of the fits to the MC Z line shape that is then propagated to the fits on data.
+I would suggest you to check if the changes implemented with this commit (https://github.com/cms-egamma/egm_tnp_analysis/commit/e6af17e44894340ccfb6d55b4fc1709a937835cc) are present in your local TnP repository. This should help improving the quality of the fits.
+
